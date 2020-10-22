@@ -9,6 +9,9 @@
 
 namespace Router\Config;
 
+use FilesystemIterator;
+use InvalidArgumentException;
+use RegexIterator;
 use Router\Entity\Route;
 use Router\RouteCollection;
 
@@ -16,10 +19,10 @@ class YamlConfig implements ConfigInterface
 {
 
     /** @var array */
-    private $configFiles = [];
+    private array $configFiles = [];
 
     /** @var RouteCollection */
-    private $routeCollection;
+    private RouteCollection $routeCollection;
 
     /**
      * YamlConfig constructor.
@@ -35,7 +38,7 @@ class YamlConfig implements ConfigInterface
     public function addConfigFiles(array $configFiles)
     {
         if(empty($configFiles)){
-            throw new \InvalidArgumentException('No configuration files specified!');
+            throw new InvalidArgumentException('No configuration files specified!');
         }
         $this->configFiles = array_merge($this->configFiles, $configFiles);
     }
@@ -45,8 +48,8 @@ class YamlConfig implements ConfigInterface
      */
     public function addConfigDir(string $configDir) {
         if(is_dir($configDir)){
-            $iterator = new \FilesystemIterator($configDir);
-            $filter = new \RegexIterator($iterator, '/^.*\.(yaml)$/i');
+            $iterator = new FilesystemIterator($configDir);
+            $filter = new RegexIterator($iterator, '/^.*\.(yaml)$/i');
             $configList = [];
             foreach($filter as $entry){
                 $configList[] = $entry->getPathname();
@@ -64,7 +67,7 @@ class YamlConfig implements ConfigInterface
     {
         foreach($this->configFiles as $configFile){
             if(!is_file($configFile)){
-                throw new \InvalidArgumentException("File $configFile not exists!");
+                throw new InvalidArgumentException("File $configFile not exists!");
             }
             $this->parseYamlFile($configFile);
         }
@@ -78,6 +81,9 @@ class YamlConfig implements ConfigInterface
     {
         $fileRoutes = yaml_parse_file($filename);
         foreach($fileRoutes['routes'] as $routeName => $fileRoute){
+            if(isset($fileRoutes['prefix'])) {
+                $fileRoute[0] = $fileRoutes['prefix'] . $fileRoute[0];
+            }
             $this->routeCollection->addRoute(new Route($routeName, $fileRoute));
         }
     }
