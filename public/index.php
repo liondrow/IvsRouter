@@ -9,7 +9,7 @@ use Router\Factories\ConfigFactory;
 
 //YAML CONFIG
 $config = ConfigFactory::YamlConfig();
-$config->addConfigFiles([dirname(__DIR__).'/tests/yaml/admin.yaml']);
+//$config->addConfigFiles([dirname(__DIR__).'/tests/admin.yaml']);
 $config->addConfigDir(dirname(__DIR__).'/tests/yaml');
 //$config->addConfigDir(dirname(__DIR__).'/tests2/yaml');
 $routes = $config->parseConfig();

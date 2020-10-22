@@ -87,6 +87,9 @@ class YamlConfig implements ConfigInterface
             if(isset($fileRoutes['prefix'])) {
                 $fileRoute[0] = $fileRoutes['prefix'] . $fileRoute[0];
             }
+            if(isset($fileRoutes['name_prefix'])) {
+                $routeName = $fileRoutes['name_prefix'].$routeName;
+            }
             $this->routeCollection->addRoute(new Route($routeName, $fileRoute));
         }
     }
