@@ -10,10 +10,10 @@
 namespace Router\Config;
 
 use FilesystemIterator;
-use http\Exception;
-use InvalidArgumentException;
 use RegexIterator;
 use Router\Entity\Route;
+use Router\Exceptions\BadRouteConfigurationException;
+use Router\Exceptions\ResourceNotFoundException;
 use Router\RouteCollection;
 
 class YamlConfig implements ConfigInterface
@@ -39,7 +39,7 @@ class YamlConfig implements ConfigInterface
     public function addConfigFiles(array $configFiles)
     {
         if(empty($configFiles)){
-            throw new InvalidArgumentException('No configuration files specified!');
+            throw new BadRouteConfigurationException('No configuration files specified!');
         }
         $this->configFiles = array_merge($this->configFiles, $configFiles);
     }
@@ -59,7 +59,7 @@ class YamlConfig implements ConfigInterface
                 $this->addConfigFiles($configList);
             }
         } else {
-            throw new \Exception("Directory $configDir does not exist!");
+            throw new ResourceNotFoundException("Directory $configDir does not exist!");
         }
     }
 
@@ -70,7 +70,7 @@ class YamlConfig implements ConfigInterface
     {
         foreach($this->configFiles as $configFile){
             if(!is_file($configFile)){
-                throw new InvalidArgumentException("File $configFile does not exist!");
+                throw new ResourceNotFoundException("File $configFile does not exist!");
             }
             $this->parseYamlFile($configFile);
         }

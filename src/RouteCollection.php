@@ -9,8 +9,8 @@
 
 namespace Router;
 
-use http\Exception\InvalidArgumentException;
 use Router\Entity\Route;
+use Router\Exceptions\BadRouteConfigurationException;
 
 class RouteCollection
 {
@@ -25,7 +25,7 @@ class RouteCollection
             return $uniqueObject->getName() == $route->getName();
         });
         if($checkRouteExist) {
-            throw new \Exception("The route " . $route->getName() . " already exists!");
+            throw new BadRouteConfigurationException("The route " . $route->getName() . " already exists!");
         }
         $this->routes[] = $route;
     }
@@ -36,7 +36,7 @@ class RouteCollection
      */
     public function addSimpleRoute(string $name, array $routeConfig) {
         if(empty($name) || empty($routeConfig)){
-            throw new InvalidArgumentException('Invalid route');
+            throw new BadRouteConfigurationException('Invalid route');
         }
         $route = new Route($name, $routeConfig);
         $this->addRoute($route);
