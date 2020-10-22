@@ -1,0 +1,27 @@
+{
+    "name": "liondrow/router",
+    "description": "Simple PHP router",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "php",
+        "php-router",
+        "router",
+        "routes"
+    ],
+    "authors": [
+        {
+            "name": "liondrow",
+            "email": "liondrow2@yandex.ru",
+            "homepage": "http://digibears.ru"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Router\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=7.2"
+    }
+}
