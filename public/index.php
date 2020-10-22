@@ -1,4 +1,8 @@
 <?php
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+
 require_once '../vendor/autoload.php';
 
 use Router\Factories\ConfigFactory;
@@ -7,7 +11,7 @@ use Router\Factories\ConfigFactory;
 $config = ConfigFactory::YamlConfig();
 $config->addConfigFiles([dirname(__DIR__).'/tests/yaml/admin.yaml']);
 $config->addConfigDir(dirname(__DIR__).'/tests/yaml');
-$config->addConfigDir(dirname(__DIR__).'/tests2/yaml');
+//$config->addConfigDir(dirname(__DIR__).'/tests2/yaml');
 $routes = $config->parseConfig();
 var_dump($routes);
 

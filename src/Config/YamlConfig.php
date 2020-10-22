@@ -10,6 +10,7 @@
 namespace Router\Config;
 
 use FilesystemIterator;
+use http\Exception;
 use InvalidArgumentException;
 use RegexIterator;
 use Router\Entity\Route;
@@ -57,6 +58,8 @@ class YamlConfig implements ConfigInterface
             if(!empty($configList)){
                 $this->addConfigFiles($configList);
             }
+        } else {
+            throw new \Exception("Directory $configDir does not exist!");
         }
     }
 
@@ -67,7 +70,7 @@ class YamlConfig implements ConfigInterface
     {
         foreach($this->configFiles as $configFile){
             if(!is_file($configFile)){
-                throw new InvalidArgumentException("File $configFile not exists!");
+                throw new InvalidArgumentException("File $configFile does not exist!");
             }
             $this->parseYamlFile($configFile);
         }
