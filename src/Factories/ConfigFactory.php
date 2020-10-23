@@ -10,7 +10,9 @@
 namespace Router\Factories;
 
 
+use Router\Config\AnnotationConfig;
 use Router\Config\YamlConfig;
+use Router\Exceptions\BadConfigConfigurationException;
 
 class ConfigFactory
 {
@@ -20,7 +22,13 @@ class ConfigFactory
         return new YamlConfig();
     }
 
-
+    public static function AnnotationConfig(string $controllersDir)
+    {
+        if(empty($controllersDir)){
+            throw new BadConfigConfigurationException('The directory with controllers is not specified!');
+        }
+        return new AnnotationConfig($controllersDir);
+    }
 
 
 

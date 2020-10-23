@@ -7,15 +7,19 @@ require_once '../vendor/autoload.php';
 
 use Router\Factories\ConfigFactory;
 
-//YAML CONFIG
-$config = ConfigFactory::YamlConfig();
-//$config->addConfigFiles([dirname(__DIR__).'/tests/admin.yaml']);
-$config->addConfigDir(dirname(__DIR__).'/tests/yaml');
-//$config->addConfigDir(dirname(__DIR__).'/tests2/yaml');
+//Yaml config
+//$config = ConfigFactory::YamlConfig();
+//$config->addConfigFiles([__DIR__.'/Tests/yaml/admin.yaml']);
+//$config->addConfigDir(__DIR__.'/tests/yaml');
+//$routes = $config->parseConfig();
+
+//Annotation config
+$config = ConfigFactory::AnnotationConfig(dirname(__DIR__) . '/src/Tests/Controllers');
 $routes = $config->parseConfig();
-var_dump($routes);
 
 
+
+//var_dump($routes);
 //$router = Router::getRouteCollection($config);
 //$router->dispatch();
 
