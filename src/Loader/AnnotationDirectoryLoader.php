@@ -10,15 +10,40 @@
 namespace Router\Loader;
 
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use RegexIterator;
+use Router\Entity\Route;
+use Router\Exceptions\ResourceNotFoundException;
+use Router\Interfaces\LoaderInterface;
+use Router\RouteCollection;
 
-class AnnotationDirectoryLoader
+class AnnotationDirectoryLoader implements LoaderInterface
 {
-    public function loadDirClasses(string $controllersDir) {
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($controllersDir));
+
+    /** @var AnnotationReader */
+    private $reader;
+
+    /**
+     * @var RouteCollection
+     */
+    private $routeCollection;
+
+    /**
+     * YamlDirectoryLoader constructor.
+     * @param RouteCollection $routeCollection
+     */
+    public function __construct(RouteCollection $routeCollection)
+    {
+        $this->routeCollection = $routeCollection;
+        $this->reader = new AnnotationReader();
+    }
+
+    public function addDir(string $dir): void
+    {
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
         $regex    = new RegexIterator($iterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
         foreach ($regex as $file => $value) {
             $current = $this->parseTokens(token_get_all(file_get_contents(str_replace('\\', '/', $file))));
@@ -28,16 +53,18 @@ class AnnotationDirectoryLoader
                 if ($reflClass->isAbstract()) {
                     continue;
                 }
-                foreach ($reflClass->getMethods() as $method) {
-                    $class   = $method->getDeclaringClass();
-                    $context = 'method ' . $class->getName() . '::' . $method->getName() . '()';
-                    var_dump($context);
-                    //TODO getting annotations
-                }
+                $annotation = $this->reader->getClassAnnotation($reflClass, Route::class);
+
+                var_dump($annotation);
+            } else {
+                throw new ResourceNotFoundException("Suitable for the configuration classes were not found");
             }
         }
+    }
 
-        return true;
+    public function fetchRoutes(RouteCollection $routeCollection): void
+    {
+        // TODO: Implement fetchRoutes() method.
     }
 
     private function parseTokens(array $tokens) {

@@ -9,89 +9,65 @@
 
 namespace Router\Config;
 
-use FilesystemIterator;
-use RegexIterator;
-use Router\Entity\Route;
-use Router\Exceptions\BadRouteConfigurationException;
 use Router\Exceptions\ResourceNotFoundException;
+use Router\Interfaces\ConfigInterface;
+use Router\Interfaces\LoaderInterface;
+use Router\Loader\YamlDirectoryLoader;
 use Router\RouteCollection;
 
+/**
+ * Class YamlConfig
+ * @package Router\Config
+ */
 class YamlConfig implements ConfigInterface
 {
-
-    /** @var array */
-    private array $configFiles = [];
+    /** @var LoaderInterface */
+    private $loader;
 
     /** @var RouteCollection */
     private RouteCollection $routeCollection;
 
     /**
      * YamlConfig constructor.
+     * @param RouteCollection|null $routeCollection
      */
-    public function __construct()
+    public function __construct(RouteCollection $routeCollection = null)
     {
-        $this->routeCollection = new RouteCollection();
+        $this->routeCollection = $routeCollection ?? new RouteCollection();
+        $this->loader = new YamlDirectoryLoader($this->routeCollection);
     }
 
     /**
-     * @param array $configFiles
+     * @param string $dirName
      */
-    public function addConfigFiles(array $configFiles)
+    public function addRoutesDir(string $dirName): void
     {
-        if(empty($configFiles)){
-            throw new BadRouteConfigurationException('No configuration files specified!');
-        }
-        $this->configFiles = array_merge($this->configFiles, $configFiles);
-    }
-
-    /**
-     * @param string $configDir
-     */
-    public function addConfigDir(string $configDir) {
-        if(is_dir($configDir)){
-            $iterator = new FilesystemIterator($configDir);
-            $filter = new RegexIterator($iterator, '/^.*\.(yaml)$/i');
-            $configList = [];
-            foreach($filter as $entry){
-                $configList[] = $entry->getPathname();
-            }
-            if(!empty($configList)){
-                $this->addConfigFiles($configList);
-            }
+        if(is_dir($dirName)){
+            $this->loader->addDir($dirName);
         } else {
-            throw new ResourceNotFoundException("Directory $configDir does not exist!");
+            throw new ResourceNotFoundException("Directory $dirName does not exist!");
+        }
+    }
+
+    /**
+     * @param array $directories
+     */
+    public function addRoutesDirArray(array $directories): void
+    {
+        if(!empty($directories)){
+            foreach ($directories as $directory){
+                $this->addRoutesDir($directory);
+            }
         }
     }
 
     /**
      * @return RouteCollection
      */
-    public function parseConfig()
+    public function parseConfig(): RouteCollection
     {
-        foreach($this->configFiles as $configFile){
-            if(!is_file($configFile)){
-                throw new ResourceNotFoundException("File $configFile does not exist!");
-            }
-            $this->parseYamlFile($configFile);
-        }
+        $this->loader->fetchRoutes($this->routeCollection);
         return $this->routeCollection;
-    }
-
-    /**
-     * @param string $filename
-     */
-    private function parseYamlFile(string $filename)
-    {
-        $fileRoutes = yaml_parse_file($filename);
-        foreach($fileRoutes['routes'] as $routeName => $fileRoute){
-            if(isset($fileRoutes['prefix'])) {
-                $fileRoute[0] = $fileRoutes['prefix'] . $fileRoute[0];
-            }
-            if(isset($fileRoutes['name_prefix'])) {
-                $routeName = $fileRoutes['name_prefix'].$routeName;
-            }
-            $this->routeCollection->addRoute(new Route($routeName, $fileRoute));
-        }
     }
 
 }

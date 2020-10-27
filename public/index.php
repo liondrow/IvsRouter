@@ -8,14 +8,15 @@ require_once '../vendor/autoload.php';
 use Router\Factories\ConfigFactory;
 
 //Yaml config
-//$config = ConfigFactory::YamlConfig();
-//$config->addConfigFiles([__DIR__.'/Tests/yaml/admin.yaml']);
-//$config->addConfigDir(__DIR__.'/tests/yaml');
-//$routes = $config->parseConfig();
-
-//Annotation config
-$config = ConfigFactory::AnnotationConfig(dirname(__DIR__) . '/src/Tests/Controllers');
+$config = ConfigFactory::YamlConfig();
+$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/yaml');
 $routes = $config->parseConfig();
+$routes->addSimpleRoute('test_simple', ['/test/simple', 'Controllers\TestController@zalupa', "POST|GET"]);
+//$routes->addRoutesArray('test_simple', ['/test/simple', 'Controllers\TestController@zalupa', "POST|GET"]);
+var_dump($routes);
+//Annotation config
+//$config = ConfigFactory::AnnotationConfig(dirname(__DIR__) . '/src/Tests/Controllers');
+//$routes = $config->parseConfig();
 
 
 

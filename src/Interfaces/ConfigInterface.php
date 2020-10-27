@@ -7,14 +7,28 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Config;
+namespace Router\Interfaces;
 
 use Router\RouteCollection;
 
+
 interface ConfigInterface
 {
+
+    /**
+     * @param string $dirName
+     * @return void
+     */
+    public function addRoutesDir(string $dirName): void;
+
+    /**
+     * @param array $directories
+     * @return void
+     */
+    public function addRoutesDirArray(array $directories): void;
+
     /**
      * @return RouteCollection
      */
-    public function parseConfig();
+    public function parseConfig(): RouteCollection;
 }

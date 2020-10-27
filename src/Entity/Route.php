@@ -28,9 +28,9 @@ class Route
     public function __construct(string $name, array $routeConfig)
     {
         $this->name = $name;
-        $this->url = $routeConfig[0];
-        $this->target = $routeConfig[1];
-        $this->methods = $routeConfig[2];
+        $this->url = (string) $routeConfig[0];
+        $this->target = (string) $routeConfig[1];
+        $this->methods = (string) $routeConfig[2];
     }
 
     /**

@@ -10,23 +10,47 @@
 namespace Router\Config;
 
 
+use Router\Exceptions\ResourceNotFoundException;
+use Router\Interfaces\ConfigInterface;
+use Router\Interfaces\LoaderInterface;
 use Router\Loader\AnnotationDirectoryLoader;
+use Router\RouteCollection;
 
 class AnnotationConfig implements ConfigInterface
 {
 
-    /** @var string */
-    public string $controllersDir;
+    /** @var LoaderInterface */
+    private $loader;
 
-    public function __construct(string $controllersDir)
+    /** @var RouteCollection */
+    private RouteCollection $routeCollection;
+
+    /**
+     * YamlConfig constructor.
+     * @param RouteCollection|null $routeCollection
+     */
+    public function __construct(RouteCollection $routeCollection = null)
     {
-        $this->controllersDir = $controllersDir;
+        $this->routeCollection = $routeCollection ?? new RouteCollection();
+        $this->loader = new AnnotationDirectoryLoader($this->routeCollection);
     }
 
-    public function parseConfig()
+    public function addRoutesDir(string $dirName): void
     {
-        $loader = new AnnotationDirectoryLoader();
-        $routes = $loader->loadDirClasses($this->controllersDir);
+        if(is_dir($dirName)){
+            $this->loader->addDir($dirName);
+        } else {
+            throw new ResourceNotFoundException("Directory $dirName does not exist!");
+        }
     }
 
+    public function addRoutesDirArray(array $directories): void
+    {
+        // TODO: Implement addRoutesDirArray() method.
+    }
+
+    public function parseConfig(): RouteCollection
+    {
+        // TODO: Implement parseConfig() method.
+    }
 }

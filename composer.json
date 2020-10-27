@@ -22,8 +22,7 @@
         }
     },
     "require": {
-        "php": ">=7.2",
-        "ext-yaml": "*",
-        "ext-http": "*"
+        "doctrine/annotations": "*",
+        "php": ">=7.2"
     }
 }
