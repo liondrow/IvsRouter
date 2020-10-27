@@ -9,28 +9,18 @@
 
 namespace Router\Factories;
 
-
-use Router\Config\AnnotationConfig;
-use Router\Config\YamlConfig;
-use Router\Exceptions\BadConfigConfigurationException;
+use Router\Config\Config;
+use Router\Interfaces\LoaderInterface;
 
 class ConfigFactory
 {
 
-    public static function YamlConfig()
+    /**
+     * @param LoaderInterface $loader
+     * @return Config
+     */
+    public static function getConfig(LoaderInterface $loader)
     {
-        return new YamlConfig();
+        return new Config($loader);
     }
-
-    public static function AnnotationConfig(string $controllersDir)
-    {
-        if(empty($controllersDir)){
-            throw new BadConfigConfigurationException('The directory with controllers is not specified!');
-        }
-        return new AnnotationConfig($controllersDir);
-    }
-
-
-
-
 }

@@ -13,12 +13,10 @@ namespace Router\Config;
 use Router\Exceptions\ResourceNotFoundException;
 use Router\Interfaces\ConfigInterface;
 use Router\Interfaces\LoaderInterface;
-use Router\Loader\AnnotationDirectoryLoader;
 use Router\RouteCollection;
 
-class AnnotationConfig implements ConfigInterface
+class Config implements ConfigInterface
 {
-
     /** @var LoaderInterface */
     private $loader;
 
@@ -29,12 +27,16 @@ class AnnotationConfig implements ConfigInterface
      * YamlConfig constructor.
      * @param RouteCollection|null $routeCollection
      */
-    public function __construct(RouteCollection $routeCollection = null)
+    public function __construct(LoaderInterface $loader, RouteCollection $routeCollection = null)
     {
         $this->routeCollection = $routeCollection ?? new RouteCollection();
-        $this->loader = new AnnotationDirectoryLoader($this->routeCollection);
+        $this->loader = $loader;
+        $this->loader->setRouteCollection($this->routeCollection);
     }
 
+    /**
+     * @param string $dirName
+     */
     public function addRoutesDir(string $dirName): void
     {
         if(is_dir($dirName)){
@@ -44,13 +46,24 @@ class AnnotationConfig implements ConfigInterface
         }
     }
 
+    /**
+     * @param array $directories
+     */
     public function addRoutesDirArray(array $directories): void
     {
-        // TODO: Implement addRoutesDirArray() method.
+        if(!empty($directories)){
+            foreach ($directories as $directory){
+                $this->addRoutesDir($directory);
+            }
+        }
     }
 
+    /**
+     * @return RouteCollection
+     */
     public function parseConfig(): RouteCollection
     {
-        // TODO: Implement parseConfig() method.
+        $this->loader->fetchRoutes($this->routeCollection);
+        return $this->routeCollection;
     }
 }

@@ -34,15 +34,6 @@ class YamlDirectoryLoader implements LoaderInterface
     private $routeCollection;
 
     /**
-     * YamlDirectoryLoader constructor.
-     * @param RouteCollection $routeCollection
-     */
-    public function __construct(RouteCollection $routeCollection)
-    {
-        $this->routeCollection = $routeCollection;
-    }
-
-    /**
      * @param string $dir
      */
     public function addDir(string $dir): void
@@ -102,6 +93,14 @@ class YamlDirectoryLoader implements LoaderInterface
             $routes[$routeName] = $fileRoute;
             $this->routeCollection->addRoutesArray($routes);
         }
+    }
+
+    /**
+     * @param RouteCollection $routeCollection
+     */
+    public function setRouteCollection(RouteCollection $routeCollection): void
+    {
+        $this->routeCollection = $routeCollection;
     }
 
 }

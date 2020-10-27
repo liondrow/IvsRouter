@@ -32,12 +32,10 @@ class AnnotationDirectoryLoader implements LoaderInterface
     private $routeCollection;
 
     /**
-     * YamlDirectoryLoader constructor.
-     * @param RouteCollection $routeCollection
+     * AnnotationDirectoryLoader constructor.
      */
-    public function __construct(RouteCollection $routeCollection)
+    public function __construct()
     {
-        $this->routeCollection = $routeCollection;
         $this->reader = new AnnotationReader();
     }
 
@@ -55,7 +53,7 @@ class AnnotationDirectoryLoader implements LoaderInterface
                 }
                 $annotation = $this->reader->getClassAnnotation($reflClass, Route::class);
 
-                var_dump($annotation);
+                var_dump(Route::class);die;
             } else {
                 throw new ResourceNotFoundException("Suitable for the configuration classes were not found");
             }
@@ -90,5 +88,13 @@ class AnnotationDirectoryLoader implements LoaderInterface
         }
 
         return false;
+    }
+
+    /**
+     * @param RouteCollection $routeCollection
+     */
+    public function setRouteCollection(RouteCollection $routeCollection): void
+    {
+        $this->routeCollection = $routeCollection;
     }
 }

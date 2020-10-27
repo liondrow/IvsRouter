@@ -30,4 +30,9 @@ interface LoaderInterface
      */
     public function fetchRoutes(RouteCollection $routeCollection): void;
 
+    /**
+     * @param RouteCollection $routeCollection
+     */
+    public function setRouteCollection(RouteCollection $routeCollection): void;
+
 }
