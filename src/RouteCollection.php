@@ -11,6 +11,7 @@ namespace Router;
 
 use Router\Entity\Route;
 use Router\Exceptions\BadRouteConfigurationException;
+use Router\Factories\RouteFactory;
 
 class RouteCollection
 {
@@ -39,7 +40,7 @@ class RouteCollection
         if(empty($name) || empty($routeConfig)){
             throw new BadRouteConfigurationException('Invalid route');
         }
-        $route = new Route($name, $routeConfig);
+        $route = RouteFactory::getRouteFromArray($name, $routeConfig);
         $this->addRoute($route);
     }
 
@@ -52,7 +53,7 @@ class RouteCollection
             throw new BadRouteConfigurationException('Invalid route');
         }
         foreach($routes as $routeName => $routeConfig){
-            $route = new Route($routeName, $routeConfig);
+            $route = RouteFactory::getRouteFromArray($routeName, $routeConfig);
             $this->addRoute($route);
         }
     }

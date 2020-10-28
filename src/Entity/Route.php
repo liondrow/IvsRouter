@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Copyright (c) 2020.
  * This file is part of the DigiBears application.
@@ -9,7 +10,10 @@
 
 namespace Router\Entity;
 
-
+/**
+ * @Annotation
+ * @Target({"CLASS","METHOD"})
+ */
 class Route
 {
 
@@ -25,12 +29,12 @@ class Route
     /** @var array */
     private $methods;
 
-    public function __construct(string $name, array $routeConfig)
+    public function __construct(array $params)
     {
-        $this->name = $name;
-        $this->url = (string) $routeConfig[0];
-        $this->target = (string) $routeConfig[1];
-        $this->methods = (string) $routeConfig[2];
+        $this->name = $params['name'];
+        $this->url = $params['url'];
+        $this->target = $params['target'];
+        $this->methods = $params['methods'];
     }
 
     /**

@@ -51,9 +51,17 @@ class AnnotationDirectoryLoader implements LoaderInterface
                 if ($reflClass->isAbstract()) {
                     continue;
                 }
-                $annotation = $this->reader->getClassAnnotation($reflClass, Route::class);
+                $refMethods = $reflClass->getMethods(\ReflectionMethod::IS_PUBLIC);
+                $routes = [];
+                foreach($refMethods as $method)
+                {
+                    $annotation = $this->reader->getMethodAnnotation($method,Route::class);
+                    if($annotation) {
+                        $routes[] = $annotation;
+                    }
+                }
 
-                var_dump(Route::class);die;
+                var_dump($routes);die;
             } else {
                 throw new ResourceNotFoundException("Suitable for the configuration classes were not found");
             }

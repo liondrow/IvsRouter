@@ -14,17 +14,14 @@ $loader = new YamlDirectoryLoader();
 $config = ConfigFactory::getConfig($loader);
 $config->addRoutesDir(dirname(__DIR__) . '/src/Tests/yaml');
 $routes = $config->parseConfig();
+$routes->addSimpleRoute("test_simple_rout", ['/test/simple/route', 'TestController@test', "PUT"]);
 
 
-
-
-
-//$routes->addSimpleRoute('test_simple', ['/test/simple', 'Controllers\TestController@zalupa', "POST|GET"]);
-
-$loader = new AnnotationDirectoryLoader();
-$config = ConfigFactory::getConfig($loader);
-$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/Controllers');
-$routes = $config->parseConfig();
+//Annotation config
+//$loader = new AnnotationDirectoryLoader();
+//$config = ConfigFactory::getConfig($loader);
+//$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/Controllers');
+//$routes = $config->parseConfig();
 //Annotation config
 //$config = ConfigFactory::AnnotationConfig(dirname(__DIR__) . '/src/Tests/Controllers');
 //$routes = $config->parseConfig();
