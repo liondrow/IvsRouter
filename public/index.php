@@ -8,27 +8,21 @@ require_once '../vendor/autoload.php';
 use Router\Factories\ConfigFactory;
 use Router\Loader\AnnotationDirectoryLoader;
 use Router\Loader\YamlDirectoryLoader;
+use Router\Router;
 
 //Yaml config
-$loader = new YamlDirectoryLoader();
-$config = ConfigFactory::getConfig($loader);
-$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/yaml');
-$routes = $config->parseConfig();
-$routes->addSimpleRoute("test_simple_rout", ['/test/simple/route', 'TestController@test', "PUT"]);
-
-
-//Annotation config
-//$loader = new AnnotationDirectoryLoader();
+//$loader = new YamlDirectoryLoader();
 //$config = ConfigFactory::getConfig($loader);
-//$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/Controllers');
+//$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/yaml');
 //$routes = $config->parseConfig();
+
+
 //Annotation config
-//$config = ConfigFactory::AnnotationConfig(dirname(__DIR__) . '/src/Tests/Controllers');
-//$routes = $config->parseConfig();
-
-
-
+$loader = new AnnotationDirectoryLoader();
+$config = ConfigFactory::getConfig($loader);
+$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/Controllers');
+$routes = $config->parseConfig();
 var_dump($routes);
-//$router = Router::getRouteCollection($config);
-//$router->dispatch();
 
+//$router = new Router($routes);
+//$router->matchRequest();

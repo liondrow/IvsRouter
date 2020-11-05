@@ -12,7 +12,6 @@ namespace Router\Loader;
 
 use FilesystemIterator;
 use RegexIterator;
-use Router\Entity\Route;
 use Router\Exceptions\BadConfigConfigurationException;
 use Router\Exceptions\BadRouteConfigurationException;
 use Router\Exceptions\ResourceNotFoundException;

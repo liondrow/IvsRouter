@@ -15,7 +15,7 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use RecursiveRegexIterator;
 use RegexIterator;
-use Router\Entity\Route;
+use Router\Route;
 use Router\Exceptions\ResourceNotFoundException;
 use Router\Interfaces\LoaderInterface;
 use Router\RouteCollection;
@@ -60,8 +60,6 @@ class AnnotationDirectoryLoader implements LoaderInterface
                         $routes[] = $annotation;
                     }
                 }
-
-                var_dump($routes);die;
             } else {
                 throw new ResourceNotFoundException("Suitable for the configuration classes were not found");
             }

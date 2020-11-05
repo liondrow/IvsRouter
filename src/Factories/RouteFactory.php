@@ -10,7 +10,7 @@
 namespace Router\Factories;
 
 
-use Router\Entity\Route;
+use Router\Route;
 
 class RouteFactory
 {
@@ -21,7 +21,7 @@ class RouteFactory
             "name" => $name,
             "url" => $params[0],
             "target" => $params[1],
-            "methods" => $params[2]
+            "methods" => explode("|", $params[2])
         ];
 
         return new Route($routeArray);

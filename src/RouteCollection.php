@@ -9,7 +9,7 @@
 
 namespace Router;
 
-use Router\Entity\Route;
+use Router\Route;
 use Router\Exceptions\BadRouteConfigurationException;
 use Router\Factories\RouteFactory;
 
