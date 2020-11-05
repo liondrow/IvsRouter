@@ -90,7 +90,7 @@ class YamlDirectoryLoader implements LoaderInterface
                 $routeName = $fileRoutes['name_prefix'].$routeName;
             }
             $routes[$routeName] = $fileRoute;
-            $this->routeCollection->addRoutesArray($routes);
+            $this->routeCollection->addRoutesFromArray($routes);
         }
     }
 

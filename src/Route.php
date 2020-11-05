@@ -33,7 +33,7 @@ class Route
     {
         $this->name = $params['name'];
         $this->url = $params['url'];
-        $this->target = $params['target'];
+        $this->target = $params['target'] ?? '';
         $this->methods = $params['methods'];
     }
 

@@ -47,7 +47,7 @@ class RouteCollection
     /**
      * @param array $routes
      */
-    public function addRoutesArray(array $routes): void
+    public function addRoutesFromArray(array $routes): void
     {
         if(empty($routes) || !is_array($routes)){
             throw new BadRouteConfigurationException('Invalid route');
@@ -55,6 +55,19 @@ class RouteCollection
         foreach($routes as $routeName => $routeConfig){
             $route = RouteFactory::getRouteFromArray($routeName, $routeConfig);
             $this->addRoute($route);
+        }
+    }
+
+    /**
+     * @param array $routes
+     */
+    public function addRoutesArray(array $routes): void
+    {
+        if(empty($routes) || !is_array($routes)){
+            throw new BadRouteConfigurationException('Invalid route');
+        }
+        foreach($routes as $routeObj){
+            $this->addRoute($routeObj);
         }
     }
 

@@ -22,7 +22,6 @@ $loader = new AnnotationDirectoryLoader();
 $config = ConfigFactory::getConfig($loader);
 $config->addRoutesDir(dirname(__DIR__) . '/src/Tests/Controllers');
 $routes = $config->parseConfig();
-var_dump($routes);
 
-//$router = new Router($routes);
-//$router->matchRequest();
+$router = new Router($routes);
+$router->matchRequest();
