@@ -18,6 +18,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use RegexIterator;
+use Router\Cache\RouterFileCache;
 use Router\Exceptions\BadConfigConfigurationException;
 use Router\Route;
 use Router\Exceptions\ResourceNotFoundException;
@@ -30,10 +31,17 @@ class AnnotationDirectoryLoader implements LoaderInterface
     /** @var AnnotationReader */
     private $reader;
 
-    /**
-     * @var RouteCollection
-     */
+    /** @var RouteCollection */
     private $routeCollection;
+
+    /** @var bool */
+    private $cacheStatus = false;
+
+    /** @var RouterFileCache */
+    private $routerCache;
+
+    /** @var bool */
+    private $cacheDebug;
 
     /**
      * AnnotationDirectoryLoader constructor.
@@ -45,6 +53,11 @@ class AnnotationDirectoryLoader implements LoaderInterface
 
     public function addDir(string $dir): void
     {
+
+        if($this->cacheStatus && !$this->cacheDebug){
+            if($this->getFromCache($dir)) return;
+        }
+
         $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
         $regex    = new RegexIterator($iterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
         foreach ($regex as $file => $value) {
@@ -72,6 +85,9 @@ class AnnotationDirectoryLoader implements LoaderInterface
                     }
                 }
                 $this->routeCollection->addRoutesArray($routes);
+                if($this->cacheStatus) {
+                    $this->cacheRoutes($routes, $dir);
+                }
             } else {
                 throw new ResourceNotFoundException("Suitable for the configuration classes were not found");
             }
@@ -82,6 +98,47 @@ class AnnotationDirectoryLoader implements LoaderInterface
     {
         if(empty($routeCollection->getRoutes())){
             throw new BadConfigConfigurationException("No available routes found");
+        }
+    }
+
+    /**
+     * @param RouteCollection $routeCollection
+     */
+    public function setRouteCollection(RouteCollection $routeCollection): void
+    {
+        $this->routeCollection = $routeCollection;
+    }
+
+    public function enableCache(string $cacheDir, bool $debug = true): void
+    {
+        $this->routerCache = new RouterFileCache($cacheDir);
+        $this->cacheDebug = $debug;
+        $this->cacheStatus = true;
+        if($debug){
+            $this->routerCache->clearCache();
+        }
+    }
+
+    private function getFromCache(string $dir): bool
+    {
+        $cache = $this->routerCache->get();
+        if(!empty($cache['data'])){
+            if(array_key_exists($dir, $cache['data'])){
+                $this->routeCollection->addRoutesArray($cache['data'][$dir]);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function cacheRoutes(array $routes, string $dir): void
+    {
+        $cacheData = [$dir => $routes];
+        $cache = $this->routerCache->get();
+        if(!empty($cache['data'])){
+            $this->routerCache->append($cacheData);
+        } else {
+            $this->routerCache->save($cacheData);
         }
     }
 
@@ -108,13 +165,5 @@ class AnnotationDirectoryLoader implements LoaderInterface
         }
 
         return false;
-    }
-
-    /**
-     * @param RouteCollection $routeCollection
-     */
-    public function setRouteCollection(RouteCollection $routeCollection): void
-    {
-        $this->routeCollection = $routeCollection;
     }
 }

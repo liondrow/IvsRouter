@@ -22,7 +22,7 @@
         }
     },
     "require": {
-        "doctrine/annotations": "*",
-        "php": ">=7.2"
+        "php": ">=7.2",
+        "doctrine/annotations": "*"
     }
 }

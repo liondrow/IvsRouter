@@ -37,6 +37,16 @@ class Route
         $this->methods = $params['methods'];
     }
 
+    public function __serialize(): array
+    {
+        return [
+            'name' => $this->getName(),
+            'url' => $this->getUrl(),
+            'target' => $this->getTarget(),
+            'methods' => $this->getMethods(),
+        ];
+    }
+
     /**
      * @return string
      */

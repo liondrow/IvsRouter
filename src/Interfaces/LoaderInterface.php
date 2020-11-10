@@ -32,7 +32,13 @@ interface LoaderInterface
 
     /**
      * @param RouteCollection $routeCollection
+     * @return void
      */
     public function setRouteCollection(RouteCollection $routeCollection): void;
 
+    /**
+     * @param string $cacheDir
+     * @return void
+     */
+    public function enableCache(string $cacheDir, bool $debug): void;
 }
