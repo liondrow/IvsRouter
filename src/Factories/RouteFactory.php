@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Factories;
+namespace IvsRouter\Factories;
 
 
-use Router\Route;
+use IvsRouter\Route;
 
 class RouteFactory
 {

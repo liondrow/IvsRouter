@@ -7,15 +7,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Config;
+namespace IvsRouter\Config;
 
-use Router\Interfaces\Cache;
-use Router\Interfaces\ConfigInterface;
-use Router\RouteCollection;
+use IvsRouter\Interfaces\Cache;
+use IvsRouter\Interfaces\ConfigInterface;
+use IvsRouter\RouteCollection;
 
 /**
  * Class Config
- * @package Router\Config
+ * @package IvsRouter\Config
  */
 class Config implements ConfigInterface
 {

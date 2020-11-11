@@ -1,10 +1,10 @@
 <?php
 
-namespace Router\Exceptions;
+namespace IvsRouter\Exceptions;
 
 /**
  * Class BadRouteConfigurationException
- * @package Router\Exceptions
+ * @package IvsRouter\Exceptions
  */
 class BadRouteConfigurationException extends \RuntimeException implements ExceptionInterface
 {

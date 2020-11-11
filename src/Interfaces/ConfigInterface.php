@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Interfaces;
+namespace IvsRouter\Interfaces;
 
-use Router\RouteCollection;
+use IvsRouter\RouteCollection;
 
 /**
  * Interface ConfigInterface
- * @package Router\Interfaces
+ * @package IvsRouter\Interfaces
  */
 interface ConfigInterface
 {

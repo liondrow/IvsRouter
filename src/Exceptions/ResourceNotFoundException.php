@@ -1,10 +1,10 @@
 <?php
 
-namespace Router\Exceptions;
+namespace IvsRouter\Exceptions;
 
 /**
  * Class ResourceNotFoundException
- * @package Router\Exceptions
+ * @package IvsRouter\Exceptions
  */
 class ResourceNotFoundException extends \RuntimeException implements ExceptionInterface
 {

@@ -1,13 +1,15 @@
 {
     "name": "liondrow/router",
-    "description": "Simple PHP router",
+    "description": "PHP router. Supports annotation and yaml configuration",
     "type": "library",
     "license": "MIT",
     "keywords": [
         "php",
         "php-router",
         "router",
-        "routes"
+        "routes",
+        "yaml",
+        "annotation"
     ],
     "authors": [
         {
@@ -18,7 +20,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Router\\": "src/"
+            "IvsRouter\\": "src/"
         }
     },
     "require": {

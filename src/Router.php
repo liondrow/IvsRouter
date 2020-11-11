@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace Router;
+namespace IvsRouter;
 
-use Router\Exceptions\BadConfigConfigurationException;
-use Router\Interfaces\LoaderInterface;
+use IvsRouter\Exceptions\BadConfigConfigurationException;
+use IvsRouter\Interfaces\LoaderInterface;
 
 /**
- * Class Router
- * @package Router
+ * Class IvsRouter
+ * @package IvsRouter
  */
 class Router
 {
@@ -26,7 +26,7 @@ class Router
 
 
     /**
-     * Router constructor.
+     * IvsRouter constructor.
      * @param LoaderInterface $loader
      */
     public function __construct(LoaderInterface $loader)

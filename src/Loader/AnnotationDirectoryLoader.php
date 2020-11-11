@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Loader;
+namespace IvsRouter\Loader;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use RecursiveDirectoryIterator;
@@ -16,18 +16,18 @@ use RecursiveRegexIterator;
 use ReflectionClass;
 use ReflectionMethod;
 use RegexIterator;
-use Router\Route;
-use Router\RouteCollection;
-use Router\Config\Config;
-use Router\Interfaces\Cache;
-use Router\Interfaces\LoaderInterface;
+use IvsRouter\Route;
+use IvsRouter\RouteCollection;
+use IvsRouter\Config\Config;
+use IvsRouter\Interfaces\Cache;
+use IvsRouter\Interfaces\LoaderInterface;
 use ReflectionException;
-use Router\Exceptions\BadConfigConfigurationException;
-use Router\Exceptions\ResourceNotFoundException;
+use IvsRouter\Exceptions\BadConfigConfigurationException;
+use IvsRouter\Exceptions\ResourceNotFoundException;
 
 /**
  * Class AnnotationDirectoryLoader
- * @package Router\Loader
+ * @package IvsRouter\Loader
  */
 class AnnotationDirectoryLoader implements LoaderInterface
 {

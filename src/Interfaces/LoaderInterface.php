@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Interfaces;
+namespace IvsRouter\Interfaces;
 
-use Router\Config\Config;
-use Router\RouteCollection;
+use IvsRouter\Config\Config;
+use IvsRouter\RouteCollection;
 
 /**
  * Interface LoaderInterface
- * @package Router\Interfaces
+ * @package IvsRouter\Interfaces
  */
 interface LoaderInterface
 {

@@ -7,22 +7,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Loader;
+namespace IvsRouter\Loader;
 
 
 use FilesystemIterator;
 use RegexIterator;
-use Router\Config\Config;
-use Router\Exceptions\BadConfigConfigurationException;
-use Router\Exceptions\BadRouteConfigurationException;
-use Router\Exceptions\ResourceNotFoundException;
-use Router\Interfaces\Cache;
-use Router\Interfaces\LoaderInterface;
-use Router\RouteCollection;
+use IvsRouter\Config\Config;
+use IvsRouter\Exceptions\BadConfigConfigurationException;
+use IvsRouter\Exceptions\BadRouteConfigurationException;
+use IvsRouter\Exceptions\ResourceNotFoundException;
+use IvsRouter\Interfaces\Cache;
+use IvsRouter\Interfaces\LoaderInterface;
+use IvsRouter\RouteCollection;
 
 /**
  * Class YamlDirectoryLoader
- * @package Router\Loader
+ * @package IvsRouter\Loader
  */
 class YamlDirectoryLoader implements LoaderInterface
 {

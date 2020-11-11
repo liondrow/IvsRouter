@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Cache;
+namespace IvsRouter\Cache;
 
 
-use Router\Interfaces\Cache;
+use IvsRouter\Interfaces\Cache;
 
 /**
  * Class RouterFileCache
- * @package Router\Cache
+ * @package IvsRouter\Cache
  */
 class RouterFileCache implements Cache
 {

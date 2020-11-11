@@ -1,10 +1,10 @@
 <?php
 
-namespace Router\Exceptions;
+namespace IvsRouter\Exceptions;
 
 /**
  * Interface ExceptionInterface
- * @package Router\Exceptions
+ * @package IvsRouter\Exceptions
  */
 interface ExceptionInterface extends \Throwable
 {

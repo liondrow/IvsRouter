@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Router\Factories;
+namespace IvsRouter\Factories;
 
-use Router\Config\Config;
-use Router\Interfaces\LoaderInterface;
+use IvsRouter\Config\Config;
+use IvsRouter\Interfaces\LoaderInterface;
 
 class LoaderFactory
 {

@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Router;
+namespace IvsRouter;
 
-use Router\Route;
-use Router\Exceptions\BadRouteConfigurationException;
-use Router\Factories\RouteFactory;
+use IvsRouter\Route;
+use IvsRouter\Exceptions\BadRouteConfigurationException;
+use IvsRouter\Factories\RouteFactory;
 
 class RouteCollection
 {
