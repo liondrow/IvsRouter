@@ -1,5 +1,5 @@
 {
-    "name": "liondrow/IvsRouter",
+    "name": "liondrow/ivs-router",
     "description": "PHP router. Supports annotation and yaml configuration",
     "type": "library",
     "license": "MIT",
