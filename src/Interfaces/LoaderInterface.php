@@ -9,6 +9,7 @@
 
 namespace Router\Interfaces;
 
+use Router\Config\Config;
 use Router\RouteCollection;
 
 /**
@@ -18,6 +19,8 @@ use Router\RouteCollection;
 interface LoaderInterface
 {
 
+    public function setConfig(Config $config): void;
+
     /**
      * @param string $dir
      * @return void
@@ -25,20 +28,7 @@ interface LoaderInterface
     public function addDir(string $dir): void;
 
     /**
-     * @param RouteCollection $routeCollection
-     * @return void
+     * @return RouteCollection
      */
-    public function fetchRoutes(RouteCollection $routeCollection): void;
-
-    /**
-     * @param RouteCollection $routeCollection
-     * @return void
-     */
-    public function setRouteCollection(RouteCollection $routeCollection): void;
-
-    /**
-     * @param string $cacheDir
-     * @return void
-     */
-    public function enableCache(string $cacheDir, bool $debug): void;
+    public function fetchRoutes(): RouteCollection;
 }

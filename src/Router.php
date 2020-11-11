@@ -4,33 +4,34 @@ declare(strict_types=1);
 namespace Router;
 
 use Router\Exceptions\BadConfigConfigurationException;
+use Router\Interfaces\LoaderInterface;
 
+/**
+ * Class Router
+ * @package Router
+ */
 class Router
 {
-    /**
-     * @var RouteCollection
-     */
+    /** @var RouteCollection */
     private $routes;
 
-    /**
-     * @var string
-     */
+    /** @var string  */
     private $requestUri;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $requestMethod;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $params = [];
 
 
-    public function __construct(RouteCollection $routes)
+    /**
+     * Router constructor.
+     * @param LoaderInterface $loader
+     */
+    public function __construct(LoaderInterface $loader)
     {
-        $this->routes = $routes->getRoutes();
+        $this->routes = $loader->fetchRoutes()->getRoutes();
         $this->requestUri = $this->getRequestUri();
         $this->requestMethod = $this->getRequestMethod();
     }
@@ -38,28 +39,38 @@ class Router
     /**
      * @return string
      */
-    public function getRequestUri()
+    public function getRequestUri(): string
     {
         $uri = rawurldecode($_SERVER['REQUEST_URI']);
         return ($uri == '/') ? '/' : rtrim(parse_url($uri, PHP_URL_PATH), '/');
     }
 
+    /**
+     * @return mixed
+     */
     public function getRequestMethod()
     {
         return $_SERVER['REQUEST_METHOD'];
     }
 
-    public function matchRequest()
+    /**
+     * @throws \Exception
+     * @return void
+     */
+    public function matchRequest(): void
     {
         if($route = $this->match()){
            $this->invoke($route);
         }
     }
 
-    public function match()
+    /**
+     * @return Route
+     * @throws \Exception
+     */
+    public function match(): Route
     {
         foreach ($this->routes as $route) {
-
             if (preg_match_all('#^' . $route->getUrl() . '$#', $this->requestUri, $matches)) {
                 $this->params = [];
                 array_shift($matches);
@@ -69,14 +80,16 @@ class Router
                     }
                 }
             }
-
             if($this->checkAvailablePattern($route->getUrl()) && $this->checkAvailableMethod($route->getMethods())) {
                 return $route;
             }
         }
-        return false;
+        throw new \Exception("throw 404");
     }
 
+    /**
+     * @param Route $route
+     */
     public function invoke(Route $route)
     {
         $target = explode('@', $route->getTarget());
@@ -86,13 +99,17 @@ class Router
             try {
                 call_user_func_array([$controller, $action], $this->params);
             } catch (\ArgumentCountError $countError) {
-                echo "Пошёл нахуй";
+                throw new \ArgumentCountError($countError->getMessage());
             }
 
         }
     }
 
-    private function checkAvailableRouteTarget(array $routeTarget)
+    /**
+     * @param array $routeTarget
+     * @return bool
+     */
+    private function checkAvailableRouteTarget(array $routeTarget): bool
     {
         if(!class_exists($routeTarget[0])){
             throw new BadConfigConfigurationException("Class " . $routeTarget[0] . " not exist!");
@@ -103,13 +120,21 @@ class Router
         return true;
     }
 
+    /**
+     * @param string $routeUrl
+     * @return false|int
+     */
     private function checkAvailablePattern(string $routeUrl)
     {
         $pattern = '@^' . $routeUrl . '/?$@i';
         return (preg_match($pattern, $this->requestUri));
     }
 
-    private function checkAvailableMethod(array $methods)
+    /**
+     * @param array $methods
+     * @return bool
+     */
+    private function checkAvailableMethod(array $methods): bool
     {
         return in_array($this->requestMethod, $methods, true);
     }

@@ -9,61 +9,79 @@
 
 namespace Router\Config;
 
-
-use Router\Exceptions\ResourceNotFoundException;
+use Router\Interfaces\Cache;
 use Router\Interfaces\ConfigInterface;
-use Router\Interfaces\LoaderInterface;
 use Router\RouteCollection;
 
+/**
+ * Class Config
+ * @package Router\Config
+ */
 class Config implements ConfigInterface
 {
-    /** @var LoaderInterface */
-    private $loader;
+
+    const DEBUG = 0;
+    const PRODUCTION = 1;
 
     /** @var RouteCollection */
     private RouteCollection $routeCollection;
 
+    /** @var bool */
+    private $envMode;
+
+    /** @var Cache */
+    private $cache;
+
+    /** @var bool */
+    private $cacheStatus = false;
+
     /**
-     * YamlConfig constructor.
+     * Config constructor.
      * @param RouteCollection|null $routeCollection
      */
-    public function __construct(LoaderInterface $loader, RouteCollection $routeCollection = null)
+    public function __construct(RouteCollection $routeCollection = null)
     {
         $this->routeCollection = $routeCollection ?? new RouteCollection();
-        $this->loader = $loader;
-        $this->loader->setRouteCollection($this->routeCollection);
     }
 
     /**
-     * @param string $dirName
+     * @param Cache $cache
      */
-    public function addRoutesDir(string $dirName): void
+    public function enableCache(Cache $cache): void
     {
-        if(is_dir($dirName)){
-            $this->loader->addDir($dirName);
-        } else {
-            throw new ResourceNotFoundException("Directory $dirName does not exist!");
-        }
+        $this->cache = $cache;
+        $this->cacheStatus = true;
     }
 
     /**
-     * @param array $directories
+     * @return bool
      */
-    public function addRoutesDirArray(array $directories): void
+    public function getEnvMode(): bool
     {
-        if(!empty($directories)){
-            foreach ($directories as $directory){
-                $this->addRoutesDir($directory);
-            }
-        }
+        return $this->envMode;
     }
 
     /**
-     * @return RouteCollection
+     * @param bool $envMode
      */
-    public function parseConfig(): RouteCollection
+    public function setEnvMode(bool $envMode): void
     {
-        $this->loader->fetchRoutes($this->routeCollection);
-        return $this->routeCollection;
+        $this->envMode = $envMode;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCacheEnabled(): bool
+    {
+        return $this->cacheStatus;
+    }
+
+    /**
+     * @return Cache
+     */
+    public function getCache(): Cache
+    {
+        return $this->cache;
     }
 }

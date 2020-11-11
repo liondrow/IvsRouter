@@ -12,15 +12,15 @@ namespace Router\Factories;
 use Router\Config\Config;
 use Router\Interfaces\LoaderInterface;
 
-class ConfigFactory
+class LoaderFactory
 {
 
     /**
      * @param LoaderInterface $loader
-     * @return Config
      */
-    public static function getConfig(LoaderInterface $loader)
+    public static function getLoader(LoaderInterface $loader, Config $config)
     {
-        return new Config($loader);
+        $loader->setConfig($config);
+        return $loader;
     }
 }

@@ -6,7 +6,8 @@ ini_set('display_startup_errors', 1);
 require_once '../vendor/autoload.php';
 
 use Router\Cache\RouterFileCache;
-use Router\Factories\ConfigFactory;
+use Router\Config\Config;
+use Router\Factories\LoaderFactory;
 use Router\Loader\AnnotationDirectoryLoader;
 use Router\Loader\YamlDirectoryLoader;
 use Router\Router;
@@ -19,14 +20,18 @@ use Router\Router;
 
 
 //Annotation config
-$loader = new AnnotationDirectoryLoader();
-$loader->enableCache('/tmp/cache/router/', false);
+//$loader = new AnnotationDirectoryLoader();
+//$cache = new RouterFileCache('/tmp/cache/router/');
+//$loader->enableCache($cache, false);
 
-$config = ConfigFactory::getConfig($loader);
-$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/Controllers');
-$routes = $config->parseConfig();
+$config = new Config();
+$config->setEnvMode(Config::DEBUG);
+$config->enableCache(new RouterFileCache(dirname($_SERVER['DOCUMENT_ROOT']) . '/cache/router/', 'routes'));
 
-$router = new Router($routes);
+$loader = LoaderFactory::getLoader(new AnnotationDirectoryLoader(), $config) ;
+$loader->addDir(dirname(__DIR__) . '/src/Tests/Controllers');
+
+$router = new Router($loader);
 $router->matchRequest();
 
-var_dump($routes);die;
+//var_dump($routes);die;

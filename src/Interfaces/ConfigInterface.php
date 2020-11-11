@@ -11,24 +11,26 @@ namespace Router\Interfaces;
 
 use Router\RouteCollection;
 
-
+/**
+ * Interface ConfigInterface
+ * @package Router\Interfaces
+ */
 interface ConfigInterface
 {
 
     /**
-     * @param string $dirName
+     * @param bool $mode
      * @return void
      */
-    public function addRoutesDir(string $dirName): void;
+    public function setEnvMode(bool $mode): void;
 
     /**
-     * @param array $directories
-     * @return void
+     * @param Cache $cache
      */
-    public function addRoutesDirArray(array $directories): void;
+    public function enableCache(Cache $cache): void;
 
     /**
-     * @return RouteCollection
+     * @return bool
      */
-    public function parseConfig(): RouteCollection;
+    public function isCacheEnabled(): bool;
 }

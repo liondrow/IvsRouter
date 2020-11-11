@@ -10,28 +10,34 @@
 namespace Router\Cache;
 
 
-class RouterFileCache
+use Router\Interfaces\Cache;
+
+/**
+ * Class RouterFileCache
+ * @package Router\Cache
+ */
+class RouterFileCache implements Cache
 {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $filename;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $cacheDir;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $lifeTime;
 
-    public function __construct(string $cacheDir = null, string $filename = 'routes', int $lifeTime = 86400)
+    /**
+     * RouterFileCache constructor.
+     * @param string $cacheDir
+     * @param string $filename
+     * @param int $lifeTime
+     */
+    public function __construct(string $cacheDir, string $filename, int $lifeTime = 86400)
     {
         $this->cacheDir = $cacheDir ?? dirname($_SERVER['DOCUMENT_ROOT']) . '/cache/router';
-        $this->filename = $filename;
+        $this->filename = $filename ?? 'routes';
         $this->lifeTime = $lifeTime;
     }
 
@@ -49,7 +55,13 @@ class RouterFileCache
         return $this->cacheDir;
     }
 
-    public function save($data) {
+    /**
+     * @param array $data
+     * @return false|int
+     * @throws \Exception
+     */
+    public function save($data)
+    {
         $cacheFileName = $this->getCacheDir() . $this->filename;
         $cacheLifeTime = time() + $this->lifeTime;
         $dataArr = [
@@ -60,7 +72,12 @@ class RouterFileCache
         return file_put_contents($cacheFileName, $cacheData);
     }
 
-    public function append($data) {
+    /**
+     * @param array $data
+     * @throws \Exception
+     */
+    public function append($data): void
+    {
         $cacheData = $this->get();
         if(!empty($cacheData['data'])){
             $key = array_key_first($data);
@@ -69,7 +86,12 @@ class RouterFileCache
         $this->save($cacheData['data']);
     }
 
-    public function get() {
+    /**
+     * @return false|mixed
+     * @throws \Exception
+     */
+    public function get()
+    {
         $cacheFileName = $this->getCacheDir() . $this->filename;
         if(is_file($cacheFileName)) {
             $cacheData = unserialize(file_get_contents($cacheFileName));
@@ -81,7 +103,11 @@ class RouterFileCache
         return false;
     }
 
-    public function clearCache() {
+    /**
+     * @throws \Exception
+     */
+    public function clearCache(): void
+    {
         @unlink($this->getCacheDir() . $this->filename);
     }
 
