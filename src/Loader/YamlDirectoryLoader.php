@@ -12,9 +12,11 @@ namespace Router\Loader;
 
 use FilesystemIterator;
 use RegexIterator;
+use Router\Config\Config;
 use Router\Exceptions\BadConfigConfigurationException;
 use Router\Exceptions\BadRouteConfigurationException;
 use Router\Exceptions\ResourceNotFoundException;
+use Router\Interfaces\Cache;
 use Router\Interfaces\LoaderInterface;
 use Router\RouteCollection;
 
@@ -27,16 +29,54 @@ class YamlDirectoryLoader implements LoaderInterface
     /** @var array */
     private array $configFiles = [];
 
-    /**
-     * @var RouteCollection
-     */
+    /** @var RouteCollection */
     private $routeCollection;
+
+    /** @var Config */
+    private $config;
+
+    /** @var Cache */
+    private $cache;
+
+    /** @var string */
+    private $yamlDir = '';
+
+    /**
+     * AnnotationDirectoryLoader constructor.
+     */
+    public function __construct(RouteCollection $routeCollection = null)
+    {
+        $this->routeCollection = $routeCollection ?? new RouteCollection();
+    }
+
+    /**
+     * @param Config $config
+     * @return void
+     */
+    public function setConfig(Config $config): void
+    {
+        $this->config = $config;
+        if($this->config->isCacheEnabled()){
+            $this->cache = $this->config->getCache();
+            if($this->config->getEnvMode() == Config::DEBUG){
+                $this->cache->clearCache();
+            }
+        }
+    }
 
     /**
      * @param string $dir
      */
     public function addDir(string $dir): void
     {
+        if(!is_dir($dir)){
+            throw new ResourceNotFoundException("Directory $dir does not exist!");
+        }
+
+        if($this->config->isCacheEnabled() && $this->config->getEnvMode() == Config::PRODUCTION){
+            if($this->getFromCache($dir)) return;
+        }
+
         $iterator = new FilesystemIterator($dir);
         $filter = new RegexIterator($iterator, '/^.*\.(yaml)$/i');
         $files = [];
@@ -45,6 +85,7 @@ class YamlDirectoryLoader implements LoaderInterface
         }
         if(!empty($files)){
             $this->addRouteFiles($files);
+            $this->yamlDir = $dir;
         }
     }
 
@@ -57,13 +98,6 @@ class YamlDirectoryLoader implements LoaderInterface
             throw new BadRouteConfigurationException('No configuration files specified!');
         }
         $this->configFiles = array_merge($this->configFiles, $files);
-    }
-
-    /**
-     * @param RouteCollection|null $routeCollection
-     */
-    public function fetchRoutes(RouteCollection $routeCollection): void
-    {
         if(empty($this->configFiles)){
             throw new BadConfigConfigurationException("Configuration is empty");
         }
@@ -95,11 +129,57 @@ class YamlDirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param RouteCollection $routeCollection
+     * @return RouteCollection
      */
-    public function setRouteCollection(RouteCollection $routeCollection): void
+    public function fetchRoutes(): RouteCollection
     {
-        $this->routeCollection = $routeCollection;
+        if(empty($this->routeCollection->getRoutes())){
+            throw new BadConfigConfigurationException("No available routes found");
+        }
+        if($this->config->isCacheEnabled()) {
+            $this->cacheRoutes($this->routeCollection->getRoutes(), $this->yamlDir);
+        }
+        return $this->routeCollection;
+    }
+
+    /**
+     * @param string $dir
+     * @return bool
+     */
+    private function getFromCache(string $dir): bool
+    {
+        $cache = $this->cache->get();
+        if(!empty($cache['data'])){
+            if(array_key_exists($dir, $cache['data'])){
+                $this->routeCollection->addRoutesArray($cache['data'][$dir]);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param array $routes
+     * @param string $dir
+     * @return void
+     */
+    private function cacheRoutes(array $routes, string $dir): void
+    {
+        $cacheData = [$dir => $routes];
+        $cache = $this->cache->get();
+        if(!empty($cache['data'])){
+            $this->cache->append($cacheData);
+        } else {
+            $this->cache->save($cacheData);
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoutes(): array
+    {
+        return $this->routeCollection->getRoutes();
     }
 
 }

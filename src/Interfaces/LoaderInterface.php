@@ -31,4 +31,9 @@ interface LoaderInterface
      * @return RouteCollection
      */
     public function fetchRoutes(): RouteCollection;
+
+    /**
+     * @return array
+     */
+    public function getRoutes(): array;
 }

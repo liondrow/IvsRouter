@@ -12,26 +12,17 @@ use Router\Loader\AnnotationDirectoryLoader;
 use Router\Loader\YamlDirectoryLoader;
 use Router\Router;
 
-//Yaml config
-//$loader = new YamlDirectoryLoader();
-//$config = ConfigFactory::getConfig($loader);
-//$config->addRoutesDir(dirname(__DIR__) . '/src/Tests/yaml');
-//$routes = $config->parseConfig();
-
-
-//Annotation config
-//$loader = new AnnotationDirectoryLoader();
-//$cache = new RouterFileCache('/tmp/cache/router/');
-//$loader->enableCache($cache, false);
-
 $config = new Config();
-$config->setEnvMode(Config::DEBUG);
+$config->setEnvMode(Config::PRODUCTION);
 $config->enableCache(new RouterFileCache(dirname($_SERVER['DOCUMENT_ROOT']) . '/cache/router/', 'routes'));
 
+//Yaml config
+//$loader = LoaderFactory::getLoader(new YamlDirectoryLoader(), $config);
+//$loader->addDir(dirname($_SERVER['DOCUMENT_ROOT']) . '/src/Tests/yaml');
+
+//Annotation config
 $loader = LoaderFactory::getLoader(new AnnotationDirectoryLoader(), $config) ;
 $loader->addDir(dirname(__DIR__) . '/src/Tests/Controllers');
 
 $router = new Router($loader);
 $router->matchRequest();
-
-//var_dump($routes);die;

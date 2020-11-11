@@ -189,4 +189,12 @@ class AnnotationDirectoryLoader implements LoaderInterface
 
         return false;
     }
+
+    /**
+     * @return array
+     */
+    public function getRoutes(): array
+    {
+        return $this->routeCollection->getRoutes();
+    }
 }
