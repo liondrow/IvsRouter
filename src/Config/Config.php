@@ -15,6 +15,7 @@ use IvsRouter\RouteCollection;
 
 /**
  * Class Config
+ *
  * @package IvsRouter\Config
  */
 class Config implements ConfigInterface
@@ -23,20 +24,29 @@ class Config implements ConfigInterface
     const DEBUG = 0;
     const PRODUCTION = 1;
 
-    /** @var RouteCollection */
+    /**
+     * @var RouteCollection 
+     */
     private RouteCollection $routeCollection;
 
-    /** @var bool */
+    /**
+     * @var bool 
+     */
     private $envMode;
 
-    /** @var Cache */
+    /**
+     * @var Cache 
+     */
     private $cache;
 
-    /** @var bool */
+    /**
+     * @var bool 
+     */
     private $cacheStatus = false;
 
     /**
      * Config constructor.
+     *
      * @param RouteCollection|null $routeCollection
      */
     public function __construct(RouteCollection $routeCollection = null)

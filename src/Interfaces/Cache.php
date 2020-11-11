@@ -24,7 +24,7 @@ interface Cache
     public function get();
 
     /**
-     * @param array $data
+     * @param  array $data
      * @return mixed
      */
     public function append(array $data);

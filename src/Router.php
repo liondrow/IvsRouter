@@ -8,25 +8,35 @@ use IvsRouter\Interfaces\LoaderInterface;
 
 /**
  * Class IvsRouter
+ *
  * @package IvsRouter
  */
 class Router
 {
-    /** @var RouteCollection */
+    /**
+     * @var RouteCollection 
+     */
     private $routes;
 
-    /** @var string  */
+    /**
+     * @var string  
+     */
     private $requestUri;
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $requestMethod;
 
-    /** @var array */
+    /**
+     * @var array 
+     */
     private $params = [];
 
 
     /**
      * IvsRouter constructor.
+     *
      * @param LoaderInterface $loader
      */
     public function __construct(LoaderInterface $loader)
@@ -59,8 +69,8 @@ class Router
      */
     public function matchRequest(): void
     {
-        if($route = $this->match()){
-           $this->invoke($route);
+        if($route = $this->match()) {
+            $this->invoke($route);
         }
     }
 
@@ -74,7 +84,7 @@ class Router
             if (preg_match_all('#^' . $route->getUrl() . '$#', $this->requestUri, $matches)) {
                 $this->params = [];
                 array_shift($matches);
-                if(!empty($matches) && is_array($matches)){
+                if(!empty($matches) && is_array($matches)) {
                     foreach ($matches as $match) {
                         $this->params[] = $match[0];
                     }
@@ -106,22 +116,22 @@ class Router
     }
 
     /**
-     * @param array $routeTarget
+     * @param  array $routeTarget
      * @return bool
      */
     private function checkAvailableRouteTarget(array $routeTarget): bool
     {
-        if(!class_exists($routeTarget[0])){
+        if(!class_exists($routeTarget[0])) {
             throw new BadConfigConfigurationException("Class " . $routeTarget[0] . " not exist!");
         }
-        if(!method_exists($routeTarget[0], $routeTarget[1])){
+        if(!method_exists($routeTarget[0], $routeTarget[1])) {
             throw new BadConfigConfigurationException("Method " . $routeTarget[1] . " in Class " . $routeTarget[0] . " not exist!");
         }
         return true;
     }
 
     /**
-     * @param string $routeUrl
+     * @param  string $routeUrl
      * @return false|int
      */
     private function checkAvailablePattern(string $routeUrl)
@@ -131,7 +141,7 @@ class Router
     }
 
     /**
-     * @param array $methods
+     * @param  array $methods
      * @return bool
      */
     private function checkAvailableMethod(array $methods): bool

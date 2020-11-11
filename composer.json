@@ -26,5 +26,8 @@
     "require": {
         "php": ">=7.2",
         "doctrine/annotations": "*"
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "*"
     }
 }

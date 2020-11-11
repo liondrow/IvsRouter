@@ -17,16 +17,24 @@ namespace IvsRouter;
 class Route
 {
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $name;
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $url;
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $target;
 
-    /** @var array */
+    /**
+     * @var array 
+     */
     private $methods;
 
     public function __construct(array $params)

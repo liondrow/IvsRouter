@@ -15,16 +15,21 @@ use IvsRouter\Factories\RouteFactory;
 
 class RouteCollection
 {
-    /** @var Route[] */
+    /**
+     * @var Route[] 
+     */
     private $routes = [];
 
     /**
      * @param Route $route
      */
-    private function addRoute(Route $route) {
-        $checkRouteExist = array_filter($this->routes, function($uniqueObject) use ($route) {
-            return $uniqueObject->getName() == $route->getName();
-        });
+    private function addRoute(Route $route)
+    {
+        $checkRouteExist = array_filter(
+            $this->routes, function ($uniqueObject) use ($route) {
+                return $uniqueObject->getName() == $route->getName();
+            }
+        );
         if($checkRouteExist) {
             throw new BadRouteConfigurationException("The route " . $route->getName() . " already exists!");
         }
@@ -33,11 +38,11 @@ class RouteCollection
 
     /**
      * @param string $name
-     * @param array $routeConfig
+     * @param array  $routeConfig
      */
     public function addSimpleRoute(string $name, array $routeConfig): void
     {
-        if(empty($name) || empty($routeConfig)){
+        if(empty($name) || empty($routeConfig)) {
             throw new BadRouteConfigurationException('Invalid route');
         }
         $route = RouteFactory::getRouteFromArray($name, $routeConfig);
@@ -49,7 +54,7 @@ class RouteCollection
      */
     public function addRoutesFromArray(array $routes): void
     {
-        if(empty($routes) || !is_array($routes)){
+        if(empty($routes) || !is_array($routes)) {
             throw new BadRouteConfigurationException('Invalid route');
         }
         foreach($routes as $routeName => $routeConfig){
@@ -63,7 +68,7 @@ class RouteCollection
      */
     public function addRoutesArray(array $routes): void
     {
-        if(empty($routes) || !is_array($routes)){
+        if(empty($routes) || !is_array($routes)) {
             throw new BadRouteConfigurationException('Invalid route');
         }
         foreach($routes as $routeObj){
@@ -74,7 +79,8 @@ class RouteCollection
     /**
      * @return Route[]
      */
-    public function getRoutes() :array {
+    public function getRoutes() :array
+    {
         return $this->routes;
     }
 

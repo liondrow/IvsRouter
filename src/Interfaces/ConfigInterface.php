@@ -13,13 +13,14 @@ use IvsRouter\RouteCollection;
 
 /**
  * Interface ConfigInterface
+ *
  * @package IvsRouter\Interfaces
  */
 interface ConfigInterface
 {
 
     /**
-     * @param bool $mode
+     * @param  bool $mode
      * @return void
      */
     public function setEnvMode(bool $mode): void;

@@ -14,6 +14,7 @@ use IvsRouter\RouteCollection;
 
 /**
  * Interface LoaderInterface
+ *
  * @package IvsRouter\Interfaces
  */
 interface LoaderInterface
@@ -22,7 +23,7 @@ interface LoaderInterface
     public function setConfig(Config $config): void;
 
     /**
-     * @param string $dir
+     * @param  string $dir
      * @return void
      */
     public function addDir(string $dir): void;

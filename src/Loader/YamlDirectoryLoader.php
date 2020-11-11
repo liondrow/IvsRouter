@@ -22,23 +22,34 @@ use IvsRouter\RouteCollection;
 
 /**
  * Class YamlDirectoryLoader
+ *
  * @package IvsRouter\Loader
  */
 class YamlDirectoryLoader implements LoaderInterface
 {
-    /** @var array */
+    /**
+     * @var array 
+     */
     private array $configFiles = [];
 
-    /** @var RouteCollection */
+    /**
+     * @var RouteCollection 
+     */
     private $routeCollection;
 
-    /** @var Config */
+    /**
+     * @var Config 
+     */
     private $config;
 
-    /** @var Cache */
+    /**
+     * @var Cache 
+     */
     private $cache;
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $yamlDir = '';
 
     /**
@@ -50,15 +61,15 @@ class YamlDirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param Config $config
+     * @param  Config $config
      * @return void
      */
     public function setConfig(Config $config): void
     {
         $this->config = $config;
-        if($this->config->isCacheEnabled()){
+        if($this->config->isCacheEnabled()) {
             $this->cache = $this->config->getCache();
-            if($this->config->getEnvMode() == Config::DEBUG){
+            if($this->config->getEnvMode() == Config::DEBUG) {
                 $this->cache->clearCache();
             }
         }
@@ -69,12 +80,13 @@ class YamlDirectoryLoader implements LoaderInterface
      */
     public function addDir(string $dir): void
     {
-        if(!is_dir($dir)){
+        if(!is_dir($dir)) {
             throw new ResourceNotFoundException("Directory $dir does not exist!");
         }
 
-        if($this->config->isCacheEnabled() && $this->config->getEnvMode() == Config::PRODUCTION){
-            if($this->getFromCache($dir)) return;
+        if($this->config->isCacheEnabled() && $this->config->getEnvMode() == Config::PRODUCTION) {
+            if($this->getFromCache($dir)) { return;
+            }
         }
 
         $iterator = new FilesystemIterator($dir);
@@ -83,7 +95,7 @@ class YamlDirectoryLoader implements LoaderInterface
         foreach($filter as $entry){
             $files[] = $entry->getPathname();
         }
-        if(!empty($files)){
+        if(!empty($files)) {
             $this->addRouteFiles($files);
             $this->yamlDir = $dir;
         }
@@ -94,15 +106,15 @@ class YamlDirectoryLoader implements LoaderInterface
      */
     public function addRouteFiles(array $files): void
     {
-        if(empty($files)){
+        if(empty($files)) {
             throw new BadRouteConfigurationException('No configuration files specified!');
         }
         $this->configFiles = array_merge($this->configFiles, $files);
-        if(empty($this->configFiles)){
+        if(empty($this->configFiles)) {
             throw new BadConfigConfigurationException("Configuration is empty");
         }
         foreach($this->configFiles as $configFile){
-            if(!is_file($configFile)){
+            if(!is_file($configFile)) {
                 throw new ResourceNotFoundException("File $configFile does not exist!");
             }
             $this->parseYamlFile($configFile);
@@ -133,7 +145,7 @@ class YamlDirectoryLoader implements LoaderInterface
      */
     public function fetchRoutes(): RouteCollection
     {
-        if(empty($this->routeCollection->getRoutes())){
+        if(empty($this->routeCollection->getRoutes())) {
             throw new BadConfigConfigurationException("No available routes found");
         }
         if($this->config->isCacheEnabled()) {
@@ -143,14 +155,14 @@ class YamlDirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param string $dir
+     * @param  string $dir
      * @return bool
      */
     private function getFromCache(string $dir): bool
     {
         $cache = $this->cache->get();
-        if(!empty($cache['data'])){
-            if(array_key_exists($dir, $cache['data'])){
+        if(!empty($cache['data'])) {
+            if(array_key_exists($dir, $cache['data'])) {
                 $this->routeCollection->addRoutesArray($cache['data'][$dir]);
                 return true;
             }
@@ -159,15 +171,15 @@ class YamlDirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param array $routes
-     * @param string $dir
+     * @param  array  $routes
+     * @param  string $dir
      * @return void
      */
     private function cacheRoutes(array $routes, string $dir): void
     {
         $cacheData = [$dir => $routes];
         $cache = $this->cache->get();
-        if(!empty($cache['data'])){
+        if(!empty($cache['data'])) {
             $this->cache->append($cacheData);
         } else {
             $this->cache->save($cacheData);

@@ -27,21 +27,30 @@ use IvsRouter\Exceptions\ResourceNotFoundException;
 
 /**
  * Class AnnotationDirectoryLoader
+ *
  * @package IvsRouter\Loader
  */
 class AnnotationDirectoryLoader implements LoaderInterface
 {
 
-    /** @var AnnotationReader */
+    /**
+     * @var AnnotationReader 
+     */
     private $reader;
 
-    /** @var RouteCollection */
+    /**
+     * @var RouteCollection 
+     */
     private $routeCollection;
 
-    /** @var Config */
+    /**
+     * @var Config 
+     */
     private $config;
 
-    /** @var Cache */
+    /**
+     * @var Cache 
+     */
     private $cache;
 
     /**
@@ -54,32 +63,34 @@ class AnnotationDirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param Config $config
+     * @param  Config $config
      * @return void
      */
     public function setConfig(Config $config): void
     {
         $this->config = $config;
-        if($this->config->isCacheEnabled()){
+        if($this->config->isCacheEnabled()) {
             $this->cache = $this->config->getCache();
-            if($this->config->getEnvMode() == Config::DEBUG){
+            if($this->config->getEnvMode() == Config::DEBUG) {
                 $this->cache->clearCache();
             }
         }
     }
 
     /**
-     * @param string $dir
+     * @param  string $dir
      * @return void
      */
     public function addDir(string $dir): void
     {
-        if(!is_dir($dir)){
+        if(!is_dir($dir)) {
             throw new ResourceNotFoundException("Directory $dir does not exist!");
         }
 
-        if($this->config->isCacheEnabled() && $this->config->getEnvMode() == Config::PRODUCTION){
-            if($this->getFromCache($dir)) return;
+        if($this->config->isCacheEnabled() && $this->config->getEnvMode() == Config::PRODUCTION) {
+            if($this->getFromCache($dir)) {
+                return;
+            }
         }
 
         $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
@@ -100,9 +111,9 @@ class AnnotationDirectoryLoader implements LoaderInterface
                 $routes = [];
                 foreach($refMethods as $method)
                 {
-                    $annotation = $this->reader->getMethodAnnotation($method,Route::class);
+                    $annotation = $this->reader->getMethodAnnotation($method, Route::class);
                     if($annotation) {
-                        if($annotation instanceof Route){
+                        if($annotation instanceof Route) {
                             $annotation->setTarget($refClass->getName() . "@" . $method->getName());
                         }
                         $routes[] = $annotation;
@@ -123,21 +134,21 @@ class AnnotationDirectoryLoader implements LoaderInterface
      */
     public function fetchRoutes(): RouteCollection
     {
-        if(empty($this->routeCollection->getRoutes())){
+        if(empty($this->routeCollection->getRoutes())) {
             throw new BadConfigConfigurationException("No available routes found");
         }
         return $this->routeCollection;
     }
 
     /**
-     * @param string $dir
+     * @param  string $dir
      * @return bool
      */
     private function getFromCache(string $dir): bool
     {
         $cache = $this->cache->get();
-        if(!empty($cache['data'])){
-            if(array_key_exists($dir, $cache['data'])){
+        if(!empty($cache['data'])) {
+            if(array_key_exists($dir, $cache['data'])) {
                 $this->routeCollection->addRoutesArray($cache['data'][$dir]);
                 return true;
             }
@@ -146,15 +157,15 @@ class AnnotationDirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param array $routes
-     * @param string $dir
+     * @param  array  $routes
+     * @param  string $dir
      * @return void
      */
     private function cacheRoutes(array $routes, string $dir): void
     {
         $cacheData = [$dir => $routes];
         $cache = $this->cache->get();
-        if(!empty($cache['data'])){
+        if(!empty($cache['data'])) {
             $this->cache->append($cacheData);
         } else {
             $this->cache->save($cacheData);
@@ -162,10 +173,11 @@ class AnnotationDirectoryLoader implements LoaderInterface
     }
 
     /**
-     * @param array $tokens
+     * @param  array $tokens
      * @return array|false
      */
-    private function parseTokens(array $tokens) {
+    private function parseTokens(array $tokens)
+    {
         $nsStart    = false;
         $classStart = false;
         $namespace  = '';

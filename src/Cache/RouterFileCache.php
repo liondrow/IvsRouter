@@ -14,25 +14,33 @@ use IvsRouter\Interfaces\Cache;
 
 /**
  * Class RouterFileCache
+ *
  * @package IvsRouter\Cache
  */
 class RouterFileCache implements Cache
 {
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $filename;
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     private $cacheDir;
 
-    /** @var int */
+    /**
+     * @var int 
+     */
     private $lifeTime;
 
     /**
      * RouterFileCache constructor.
+     *
      * @param string $cacheDir
      * @param string $filename
-     * @param int $lifeTime
+     * @param int    $lifeTime
      */
     public function __construct(string $cacheDir, string $filename, int $lifeTime = 86400)
     {
@@ -46,7 +54,7 @@ class RouterFileCache implements Cache
      */
     private function getCacheDir() :string
     {
-        if(!is_dir($this->cacheDir)){
+        if(!is_dir($this->cacheDir)) {
             if(!mkdir($this->cacheDir, 0755, true)) {
                 $mkdirError = error_get_last();
                 throw new \Exception('Cant create directory ' .$mkdirError['message'], 1);
@@ -56,7 +64,7 @@ class RouterFileCache implements Cache
     }
 
     /**
-     * @param array $data
+     * @param  array $data
      * @return false|int
      * @throws \Exception
      */
@@ -73,13 +81,13 @@ class RouterFileCache implements Cache
     }
 
     /**
-     * @param array $data
+     * @param  array $data
      * @throws \Exception
      */
     public function append($data): void
     {
         $cacheData = $this->get();
-        if(!empty($cacheData['data'])){
+        if(!empty($cacheData['data'])) {
             $key = array_key_first($data);
             $cacheData['data'][$key] = $data[$key];
         }
@@ -95,7 +103,7 @@ class RouterFileCache implements Cache
         $cacheFileName = $this->getCacheDir() . $this->filename;
         if(is_file($cacheFileName)) {
             $cacheData = unserialize(file_get_contents($cacheFileName));
-            if($cacheData['lifeTime'] > time()){
+            if($cacheData['lifeTime'] > time()) {
                 return $cacheData;
             }
             $this->clearCache();
